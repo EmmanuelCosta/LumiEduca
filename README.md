@@ -6,10 +6,10 @@ O projeto será criado usando React.
 
 Equipe:
 
-Adriel dos Santos Azevedo
-Bernardo Teixeira Oliveira
-Bryan Duarte de Araujo Pereira
-Emmanuel Nazareth Bravo da Costa
-João Lucas Binttencourt Rocha
-João Paulo Amarilha Coelho
-José Carlos Silva Pimentel
+Adriel dos Santos Azevedo <br>
+Bernardo Teixeira Oliveira <br>
+Bryan Duarte de Araujo Pereira <br>
+Emmanuel Nazareth Bravo da Costa <br>
+João Lucas Binttencourt Rocha <br>
+João Paulo Amarilha Coelho <br>
+José Carlos Silva Pimentel <br>
