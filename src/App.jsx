@@ -1,41 +1,37 @@
-import { Routes, Route, Link } from 'react-router-dom';
+// src/App.jsx
+import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import QuestaoMatematica from './components/QuestaoMatematica';
-
-// Criamos um componente rápido para a Home
-function Home() {
-  return (
-    <div style={{ textAlign: 'center', padding: '40px' }}>
-      <h2>O que o Lumi vai te ensinar hoje?</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '30px' }}>
-        
-        {/* O 'Link' substitui o <a> e o estado manual de navegação */}
-        <Link to="/matematica" className="btn-lumi" style={{ textDecoration: 'none' }}>
-          ➕ Matemática
-        </Link>
-
-        <button className="btn-lumi" style={{ opacity: 0.5, cursor: 'not-allowed' }} disabled>
-          📚 Português (Em breve)
-        </button>
-      </div>
-    </div>
-  );
-}
+import Trilha from './pages/Trilha';
+import Home from './pages/Home';
+import QuestaoMatematica from './pages/QuestaoMatematica';
+import TelaVitoria from './pages/TelaVitoria';
 
 function App() {
+  const [pontos, setPontos] = useState(() => {
+    const salvo = localStorage.getItem('lumi_pontos');
+    return salvo ? parseInt(salvo) : 0;
+  });
+
+  // Toda vez que o estado 'pontos' mudar, ele salva no navegador
+  useEffect(() => {
+    localStorage.setItem('lumi_pontos', pontos.toString());
+  }, [pontos]);
+
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
-      <Header />
+      <Header pontos={pontos} />
       
-      {/* Aqui definimos os caminhos do site */}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/matematica" element={
-          <div style={{ padding: '20px', textAlign: 'center' }}>
-            <Link to="/" style={{ color: 'var(--lumi-orange)', fontWeight: 'bold' }}>← Voltar</Link>
-            <QuestaoMatematica />
-          </div>
-        } />
+  
+        {/* Esta rota serve para qualquer trilha: /trilha/matematica ou /trilha/portugues */}
+        <Route path="/trilha/:materia" element={<Trilha />} />
+
+        {/* Rota para o exercício específico */}
+        <Route path="/exercicio/:materia/:id" element={<QuestaoMatematica pontos={pontos} setPontos={setPontos} />} />
+
+        <Route path="/vitoria" element={<TelaVitoria pontos={pontos} setPontos={setPontos} />} />
       </Routes>
     </div>
   );
