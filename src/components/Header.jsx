@@ -1,7 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logoLumi from '../assets/Lumi.png';
 
 export default function Header({ pontos }) {
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    // Captura o evento de instalação do navegador
+    const handler = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handler);
+
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setDeferredPrompt(null);
+      }
+    }
+  };
+
   return (
     <header style={headerStyle}>
       <div style={containerStyle}>
@@ -15,6 +39,13 @@ export default function Header({ pontos }) {
           />
           <h2 style={tituloStyle}>LumiEduca</h2>
         </div>
+
+        {/* Centro: Botão de Instalar (Só aparece se disponível) */}
+        {deferredPrompt && (
+          <button onClick={handleInstallClick} style={installButtonStyle}>
+            📥 Baixar App
+          </button>
+        )}
         
         {/* Lado Direito: Placar de Pontos */}
         <div style={placarContainerStyle}>
@@ -27,7 +58,8 @@ export default function Header({ pontos }) {
   );
 }
 
-// Estilos para Web
+// --- ESTILOS ---
+
 const headerStyle = {
   backgroundColor: 'white',
   padding: '10px 20px',
@@ -60,8 +92,22 @@ const logoImageStyle = {
 const tituloStyle = {
   fontSize: '1.5rem',
   fontWeight: '900',
-  color: '#FF8C00', // Lumi Orange
+  color: '#FF8C00', 
   margin: 0
+};
+
+// Novo estilo para o botão de instalação
+const installButtonStyle = {
+  backgroundColor: '#FF8C00',
+  color: 'white',
+  border: 'none',
+  padding: '8px 15px',
+  borderRadius: '15px',
+  cursor: 'pointer',
+  fontWeight: 'bold',
+  fontSize: '0.9rem',
+  boxShadow: '0 4px 0 #CC7000', // Sombra estilo jogo
+  transition: 'transform 0.1s'
 };
 
 const placarContainerStyle = {
