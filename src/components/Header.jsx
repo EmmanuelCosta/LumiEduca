@@ -35,47 +35,45 @@ export default function Header({ pontos }) {
     <header style={headerStyle}>
       <div style={containerStyle}>
         
-        {/* Lado Esquerdo: Logo e Nome */}
+        {/* Lado Esquerdo: Logo e Nome (Sempre visíveis) */}
         <div style={logoGroupStyle}>
           <img 
             src={logoLumi} 
             alt="Lumi" 
             style={{ 
-              ...logoImageStyle, 
-              height: isMobile ? '30px' : '40px' 
+              height: isMobile ? '28px' : '40px', 
+              width: 'auto' 
             }} 
           />
-          {/* Esconde o texto do título em telas muito pequenas para dar espaço ao botão */}
-          {(!isMobile || (isMobile && !deferredPrompt)) && (
-            <h2 style={{ 
-              ...tituloStyle, 
-              fontSize: isMobile ? '1.1rem' : '1.5rem' 
-            }}>
-              LumiEduca
-            </h2>
-          )}
+          <h2 style={{ 
+            ...tituloStyle, 
+            fontSize: isMobile ? '1rem' : '1.5rem' // Diminui mas não some
+          }}>
+            LumiEduca
+          </h2>
         </div>
 
-        {/* Centro: Botão de Instalar */}
+        {/* Centro: Botão de Instalar (Compacto no Mobile) */}
         {deferredPrompt && (
           <button onClick={handleInstallClick} style={{
             ...installButtonStyle,
-            padding: isMobile ? '6px 10px' : '8px 15px',
-            fontSize: isMobile ? '0.75rem' : '0.9rem'
+            padding: isMobile ? '6px 8px' : '8px 15px',
+            fontSize: isMobile ? '0.7rem' : '0.9rem',
+            margin: isMobile ? '0 4px' : '0 10px'
           }}>
-            {isMobile ? "📥 Baixar" : "📥 Baixar App"}
+            {isMobile ? "📥 Instalar" : "📥 Baixar App"}
           </button>
         )}
         
         {/* Lado Direito: Placar de Pontos */}
         <div style={{ 
           ...placarContainerStyle, 
-          padding: isMobile ? '4px 10px' : '5px 15px' 
+          padding: isMobile ? '4px 8px' : '5px 15px' 
         }}>
-          <span style={{ fontSize: isMobile ? '1rem' : '1.2rem' }}>🌟</span>
+          <span style={{ fontSize: isMobile ? '0.9rem' : '1.2rem' }}>🌟</span>
           <span style={{ 
             ...textoPontosStyle, 
-            fontSize: isMobile ? '0.9rem' : '1.1rem' 
+            fontSize: isMobile ? '0.85rem' : '1.1rem' 
           }}>
             {pontos}
           </span>
@@ -86,11 +84,11 @@ export default function Header({ pontos }) {
   );
 }
 
-// --- ESTILOS RESPONSIVOS ---
+// --- ESTILOS ---
 
 const headerStyle = {
   backgroundColor: 'white',
-  padding: '10px 3%', // Padding lateral em porcentagem
+  padding: '10px 3%', 
   borderBottom: '2px solid #e5e5e5',
   position: 'sticky',
   top: 0,
@@ -105,49 +103,46 @@ const containerStyle = {
   margin: '0 auto',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between',
-  width: '100%'
+  justifyContent: 'space-between', // Distribui os 3 elementos
+  width: '100%',
+  gap: '5px' // Espaço mínimo entre os itens para não colarem
 };
 
 const logoGroupStyle = {
   display: 'flex',
   alignItems: 'center',
-  gap: '8px'
-};
-
-const logoImageStyle = {
-  width: 'auto',
-  transition: 'height 0.2s'
+  gap: '6px',
+  flexShrink: 1 // Permite que o logo encolha um pouco se necessário
 };
 
 const tituloStyle = {
   fontWeight: '900',
   color: '#FF8C00', 
   margin: 0,
-  whiteSpace: 'nowrap' // Impede que o nome quebre em duas linhas
+  whiteSpace: 'nowrap',
+  transition: 'font-size 0.2s'
 };
 
 const installButtonStyle = {
   backgroundColor: '#FF8C00',
   color: 'white',
   border: 'none',
-  borderRadius: '12px',
+  borderRadius: '10px',
   cursor: 'pointer',
   fontWeight: 'bold',
   boxShadow: '0 3px 0 #CC7000',
-  transition: 'transform 0.1s',
   whiteSpace: 'nowrap',
-  margin: '0 5px'
+  flexShrink: 0 // O botão de baixar não deve sumir/encolher
 };
 
 const placarContainerStyle = {
   backgroundColor: '#f0f0f0',
   display: 'flex',
   alignItems: 'center',
-  borderRadius: '20px',
+  borderRadius: '15px',
   border: '2px solid #ddd',
-  gap: '5px',
-  flexShrink: 0 // Impede o placar de "esmagar"
+  gap: '4px',
+  flexShrink: 0 // Garante que os pontos fiquem sempre visíveis
 };
 
 const textoPontosStyle = {
