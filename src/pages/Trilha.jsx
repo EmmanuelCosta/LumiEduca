@@ -63,11 +63,6 @@ export default function Trilha() {
             </button>
 
             <p style={nomeFaseStyle}>{fase.nome}</p>
-
-            {/* Linha Conectora (apenas se não for o último) */}
-            {/* index < dados.fases.length - 1 && (
-  <div style={linhaStyle}></div>
-) */}
             
           </div>
         ))}
@@ -138,13 +133,4 @@ const nomeFaseStyle = {
   marginTop: '10px',
   fontSize: '1.1rem',
   color: '#333'
-};
-
-const linhaStyle = {
-  position: 'absolute',
-  top: '40px',
-  width: '8px',
-  height: '110px',
-  backgroundColor: '#e5e5e5',
-  zIndex: -1
 };
