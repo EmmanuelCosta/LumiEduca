@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const DADOS_TRILHAS = {
@@ -25,6 +25,15 @@ export default function Trilha() {
   const navigate = useNavigate();
   const dados = DADOS_TRILHAS[materia];
 
+  // Lógica para detectar mobile em tempo real
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   if (!dados) {
     return (
       <div style={{ padding: '20px', textAlign: 'center' }}>
@@ -35,34 +44,49 @@ export default function Trilha() {
   }
 
   return (
-    <div style={containerStyle}>
+    <div style={{ ...containerStyle, padding: isMobile ? '20px 10px' : '40px 20px' }}>
       {/* Botão Voltar */}
-      <button onClick={() => navigate('/')} style={btnVoltarStyle}>
+      <button onClick={() => navigate('/')} style={{ ...btnVoltarStyle, fontSize: isMobile ? '1.2rem' : '1rem' }}>
         ← Menu Inicial
       </button>
       
-      <h1 style={{ ...tituloStyle, color: dados.cor }}>
+      <h1 style={{ 
+        ...tituloStyle, 
+        color: dados.cor,
+        fontSize: isMobile ? '1.8rem' : '2.5rem',
+        textAlign: 'center'
+      }}>
         Trilha de {dados.nome}
       </h1>
       
       <div style={containerTrilhaStyle}>
-        {dados.fases.map((fase, index) => (
-          <div key={fase.id} style={wrapperFaseStyle}>
+        {dados.fases.map((fase) => (
+          <div key={fase.id} style={{ ...wrapperFaseStyle, marginBottom: isMobile ? '40px' : '60px' }}>
             
-            {/* Círculo da Fase */}
+            {/* Círculo da Fase - Bem maior no Mobile */}
             <button 
               onClick={() => fase.path && navigate(fase.path)}
               disabled={!fase.path}
               style={{ 
                 ...circuloStyle, 
+                width: isMobile ? '110px' : '80px',
+                height: isMobile ? '110px' : '80px',
+                fontSize: isMobile ? '2.2rem' : '1.5rem',
                 backgroundColor: fase.path ? dados.cor : '#ccc',
-                cursor: fase.path ? 'pointer' : 'not-allowed'
+                cursor: fase.path ? 'pointer' : 'not-allowed',
+                boxShadow: isMobile ? '0 6px 0 #bbb' : '0 4px 0 #bbb' // Efeito 3D mais forte no mobile
               }}
             >
               {fase.id}
             </button>
 
-            <p style={nomeFaseStyle}>{fase.nome}</p>
+            <p style={{ 
+              ...nomeFaseStyle, 
+              fontSize: isMobile ? '1.4rem' : '1.1rem',
+              marginTop: isMobile ? '15px' : '10px'
+            }}>
+              {fase.nome}
+            </p>
             
           </div>
         ))}
@@ -71,9 +95,9 @@ export default function Trilha() {
   );
 }
 
-// Estilos para Web (React)
+// --- ESTILOS ---
+
 const containerStyle = {
-  padding: '40px 20px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -88,12 +112,10 @@ const btnVoltarStyle = {
   color: '#888',
   fontWeight: 'bold',
   cursor: 'pointer',
-  marginBottom: '20px',
-  fontSize: '1rem'
+  marginBottom: '20px'
 };
 
 const tituloStyle = {
-  fontSize: '2rem',
   fontWeight: '900',
   marginBottom: '40px'
 };
@@ -109,28 +131,22 @@ const wrapperFaseStyle = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  marginBottom: '60px',
   position: 'relative',
   zIndex: 1
 };
 
 const circuloStyle = {
-  width: '80px',
-  height: '80px',
   borderRadius: '50%',
   border: 'none',
   color: 'white',
-  fontSize: '1.5rem',
   fontWeight: 'bold',
-  boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
   zIndex: 3, 
-  cursor: 'pointer',
-  position: 'relative' 
+  position: 'relative',
+  transition: 'transform 0.1s active'
 };
 
 const nomeFaseStyle = {
   fontWeight: 'bold',
-  marginTop: '10px',
-  fontSize: '1.1rem',
-  color: '#333'
+  color: '#333',
+  textAlign: 'center'
 };

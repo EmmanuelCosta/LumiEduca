@@ -1,13 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
   const navigate = useNavigate();
 
+  // Lógica para detectar mobile
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <div style={containerStyle}>
-      <h1 style={tituloStyle}>Olá, Pequeno Explorador! 🦊</h1>
-      <p style={subtituloStyle}>Qual caminho vamos seguir hoje?</p>
+    <div style={{ ...containerStyle, padding: isMobile ? '30px 15px' : '40px 20px' }}>
+      <h1 style={{ 
+        ...tituloStyle, 
+        fontSize: isMobile ? '1.8rem' : '2.5rem',
+        marginBottom: isMobile ? '5px' : '10px' 
+      }}>
+        Olá, Pequeno Explorador! 🦊
+      </h1>
+      <p style={{ 
+        ...subtituloStyle, 
+        fontSize: isMobile ? '1.2rem' : '1.1rem',
+        marginBottom: isMobile ? '40px' : '30px' 
+      }}>
+        Qual caminho vamos seguir hoje?
+      </p>
 
       <div style={trilhaStyle}>
         
@@ -15,27 +36,51 @@ export default function Home() {
         <div style={faseWrapperStyle}>
           <button 
             className="btn-lumi" 
-            style={botaoMatematicaStyle}
+            style={{ 
+              ...botaoMatematicaStyle, 
+              width: isMobile ? '90%' : '320px',
+              padding: isMobile ? '25px 20px' : '20px 40px',
+              fontSize: isMobile ? '1.4rem' : '1.2rem',
+              boxShadow: isMobile ? '0 6px 0 #CC7000' : '0 4px 15px rgba(255,140,0,0.3)'
+            }}
             onClick={() => navigate('/trilha/matematica')}
           >
             ➕ Matemática
           </button>
-          <span style={legendaStyle}>Desafio de Soma</span>
+          <span style={{ ...legendaStyle, fontSize: isMobile ? '1.1rem' : '1rem' }}>
+            Desafio de Soma
+          </span>
         </div>
 
         {/* Linha conectora cinza */}
-        <div style={linhaStyle}></div>
+        <div style={{ 
+          ...linhaStyle, 
+          height: isMobile ? '40px' : '50px',
+          width: isMobile ? '8px' : '10px' 
+        }}></div>
 
         {/* Botão de Português */}
         <div style={faseWrapperStyle}>
           <button 
             className="btn-lumi" 
-            style={botaoPortuguesStyle}
+            style={{ 
+              ...botaoPortuguesStyle, 
+              width: isMobile ? '90%' : '320px',
+              padding: isMobile ? '25px 20px' : '20px 40px',
+              fontSize: isMobile ? '1.4rem' : '1.2rem',
+              boxShadow: isMobile ? '0 6px 0 #2980b9' : '0 4px 15px rgba(52,152,219,0.3)'
+            }}
             onClick={() => navigate('/trilha/portugues')}
           >
             📚 Português
           </button>
-          <span style={{ ...legendaStyle, color: '#aaa' }}>Alfabeto (Em breve)</span>
+          <span style={{ 
+            ...legendaStyle, 
+            color: '#aaa', 
+            fontSize: isMobile ? '1.1rem' : '1rem' 
+          }}>
+            Alfabeto (Em breve)
+          </span>
         </div>
 
       </div>
@@ -43,9 +88,9 @@ export default function Home() {
   );
 }
 
-// Estilos para Web
+// --- ESTILOS ---
+
 const containerStyle = {
-  padding: '40px 20px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -54,18 +99,14 @@ const containerStyle = {
 };
 
 const tituloStyle = {
-  color: '#FF8C00', // Lumi Orange
+  color: '#FF8C00', 
   fontWeight: '900',
-  fontSize: '2rem',
-  textAlign: 'center',
-  marginBottom: '10px'
+  textAlign: 'center'
 };
 
 const subtituloStyle = {
   color: '#666',
-  fontSize: '1.1rem',
-  textAlign: 'center',
-  marginBottom: '30px'
+  textAlign: 'center'
 };
 
 const trilhaStyle = {
@@ -86,40 +127,30 @@ const faseWrapperStyle = {
 const botaoMatematicaStyle = {
   backgroundColor: '#FF8C00',
   color: 'white',
-  padding: '20px 40px',
-  borderRadius: '20px',
+  borderRadius: '25px',
   border: 'none',
-  width: '280px',
-  fontSize: '1.2rem',
   fontWeight: 'bold',
   cursor: 'pointer',
-  boxShadow: '0 4px 15px rgba(255,140,0,0.3)',
-  transition: 'transform 0.2s'
+  transition: 'transform 0.1s'
 };
 
 const botaoPortuguesStyle = {
   backgroundColor: '#3498db',
   color: 'white',
-  padding: '20px 40px',
-  borderRadius: '20px',
+  borderRadius: '25px',
   border: 'none',
-  width: '280px',
-  fontSize: '1.2rem',
   fontWeight: 'bold',
   cursor: 'pointer',
-  boxShadow: '0 4px 15px rgba(52,152,219,0.3)'
+  transition: 'transform 0.1s'
 };
 
 const legendaStyle = {
   fontWeight: 'bold',
-  marginTop: '10px',
-  fontSize: '1rem',
+  marginTop: '12px',
   color: '#333'
 };
 
 const linhaStyle = {
-  width: '10px',
-  height: '50px',
   backgroundColor: '#e5e5e5',
-  margin: '5px 0'
+  margin: '8px 0'
 };

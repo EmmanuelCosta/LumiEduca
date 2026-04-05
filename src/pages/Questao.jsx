@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { bancoDeQuestoes } from '../data/questoes';
 
@@ -12,6 +12,15 @@ export default function Questao({ setPontos, concluidas, setConcluidas }) {
   const [escolha, setEscolha] = useState(null);
   const [errouAlguma, setErrouAlguma] = useState(false);
 
+  // Lógica para detectar mobile
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const questaoAtual = questoes[indice];
   const idUnico = `${materia}-${questaoAtual?.id}`;
 
@@ -21,7 +30,6 @@ export default function Questao({ setPontos, concluidas, setConcluidas }) {
     setRespondido(true);
 
     if (valor === questaoAtual.correta) {
-      // SÓ PONTUA SE NÃO ESTIVER NA LISTA DE CONCLUÍDAS
       if (!concluidas.includes(idUnico)) {
         setPontos(prev => prev + 10);
         setConcluidas(prev => [...prev, idUnico]);
@@ -46,33 +54,117 @@ export default function Questao({ setPontos, concluidas, setConcluidas }) {
     }
   };
 
+  if (!questaoAtual) return null;
+
   return (
-    <div style={cardStyle}>
-      <h2 style={{ marginBottom: '20px' }}>{questaoAtual.pergunta}</h2>
-      <div style={gridStyle}>
-        {questaoAtual.opcoes.map((op) => (
-          <button 
-            key={op} 
-            className="btn-lumi"
-            style={{ 
-              padding: '20px', 
-              backgroundColor: respondido ? (op === questaoAtual.correta ? '#2ecc71' : (op === escolha ? '#e74c3c' : 'white')) : 'white',
-              color: respondido && (op === questaoAtual.correta || op === escolha) ? 'white' : 'black'
-            }}
-            onClick={() => conferir(op)}
-          >
-            {op}
-          </button>
-        ))}
+    <div style={{ 
+      ...cardStyle, 
+      maxWidth: isMobile ? '90%' : '450px',
+      padding: isMobile ? '20px' : '30px'
+    }}>
+      {/* Indicador de progresso */}
+      <p style={{ color: '#888', fontWeight: 'bold' }}>
+        Questão {indice + 1} de {questoes.length}
+      </p>
+
+      <h2 style={{ 
+        marginBottom: '30px', 
+        fontSize: isMobile ? '1.5rem' : '1.8rem',
+        color: '#333'
+      }}>
+        {questaoAtual.pergunta}
+      </h2>
+
+      <div style={{ 
+        ...gridStyle, 
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' // Coluna única no mobile
+      }}>
+        {questaoAtual.opcoes.map((op) => {
+          const isCorreta = op === questaoAtual.correta;
+          const isEscolhida = op === escolha;
+          
+          let bgColor = 'white';
+          let textColor = 'black';
+
+          if (respondido) {
+            if (isCorreta) {
+              bgColor = '#2ecc71';
+              textColor = 'white';
+            } else if (isEscolhida) {
+              bgColor = '#e74c3c';
+              textColor = 'white';
+            }
+          }
+
+          return (
+            <button 
+              key={op} 
+              style={{ 
+                ...btnRespostaStyle,
+                padding: isMobile ? '25px 15px' : '20px', 
+                fontSize: isMobile ? '1.3rem' : '1.1rem',
+                backgroundColor: bgColor,
+                color: textColor,
+                border: respondido ? 'none' : '2px solid #e5e5e5',
+                boxShadow: !respondido ? '0 4px 0 #e5e5e5' : 'none'
+              }}
+              onClick={() => conferir(op)}
+            >
+              {op}
+            </button>
+          );
+        })}
       </div>
+
       {respondido && (
-        <button className="btn-lumi" onClick={proximo} style={{ marginTop: '20px', width: '100%', backgroundColor: '#FF8C00', color: 'white' }}>
-          {indice < questoes.length - 1 ? "PRÓXIMA" : "FINALIZAR"}
+        <button 
+          onClick={proximo} 
+          style={{ 
+            ...btnProximoStyle,
+            padding: isMobile ? '20px' : '15px',
+            fontSize: isMobile ? '1.2rem' : '1rem'
+          }}
+        >
+          {indice < questoes.length - 1 ? "PRÓXIMA PERGUNTA ➔" : "VER MEUS PONTOS 🏆"}
         </button>
       )}
     </div>
   );
 }
 
-const cardStyle = { backgroundColor: 'white', padding: '30px', borderRadius: '20px', maxWidth: '450px', margin: '40px auto', textAlign: 'center', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' };
-const gridStyle = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' };
+// --- ESTILOS ---
+
+const cardStyle = { 
+  backgroundColor: 'white', 
+  margin: '20px auto', 
+  textAlign: 'center', 
+  borderRadius: '25px',
+  boxShadow: '0 8px 20px rgba(0,0,0,0.08)' 
+};
+
+const gridStyle = { 
+  display: 'grid', 
+  gap: '15px' 
+};
+
+const btnRespostaStyle = {
+  borderRadius: '15px',
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  transition: 'all 0.1s ease',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
+};
+
+const btnProximoStyle = {
+  marginTop: '30px', 
+  width: '100%', 
+  backgroundColor: '#FF8C00', 
+  color: 'white',
+  border: 'none',
+  borderRadius: '15px',
+  fontWeight: '900',
+  cursor: 'pointer',
+  boxShadow: '0 5px 0 #CC7000'
+};
