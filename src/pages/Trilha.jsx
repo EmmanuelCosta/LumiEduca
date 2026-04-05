@@ -1,54 +1,74 @@
-// src/pages/Trilha.jsx
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const DADOS_TRILHAS = {
   matematica: {
     nome: "Matemática",
-    cor: "var(--lumi-orange)",
+    cor: "#FF8C00",
     fases: [
-      { id: 1, nome: "Soma básica", path: "/exercicio/matematica/0" },
-      { id: 2, nome: "Subtração", path: "#" },
+      { id: 1, nome: "Soma básica", path: "/exercicio/matematica" },
+      { id: 2, nome: "Subtração", path: null },
     ]
   },
   portugues: {
     nome: "Português",
-    cor: "#3498db", // Azul para português
+    cor: "#3498db",
     fases: [
-      { id: 1, nome: "Vogais", path: "#" },
-      { id: 2, nome: "Sílabas", path: "#" },
+      { id: 1, nome: "Vogais", path: null },
+      { id: 2, nome: "Sílabas", path: null },
     ]
   }
 };
 
 export default function Trilha() {
-  const { materia } = useParams(); // Pega 'matematica' ou 'portugues' da URL
+  const { materia } = useParams();
   const navigate = useNavigate();
   const dados = DADOS_TRILHAS[materia];
 
-  if (!dados) return <div>Trilha não encontrada!</div>;
+  if (!dados) {
+    return (
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <h2>Trilha não encontrada!</h2>
+        <button onClick={() => navigate('/')}>Voltar ao Menu</button>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ textAlign: 'center', padding: '40px' }}>
-      <button onClick={() => navigate('/')} style={btnVoltar}>← Menu</button>
+    <div style={containerStyle}>
+      {/* Botão Voltar */}
+      <button onClick={() => navigate('/')} style={btnVoltarStyle}>
+        ← Menu Inicial
+      </button>
       
-      <h1 style={{ color: dados.cor }}>Trilha de {dados.nome}</h1>
+      <h1 style={{ ...tituloStyle, color: dados.cor }}>
+        Trilha de {dados.nome}
+      </h1>
       
-      <div style={containerTrilha}>
+      <div style={containerTrilhaStyle}>
         {dados.fases.map((fase, index) => (
-          <div key={fase.id} style={wrapperFase}>
+          <div key={fase.id} style={wrapperFaseStyle}>
+            
+            {/* Círculo da Fase */}
             <button 
-              className="btn-lumi" 
-              onClick={() => fase.path !== "#" && navigate(fase.path)}
+              onClick={() => fase.path && navigate(fase.path)}
+              disabled={!fase.path}
               style={{ 
-                backgroundColor: dados.cor, 
-                width: '80px', height: '80px', borderRadius: '50%' 
+                ...circuloStyle, 
+                backgroundColor: fase.path ? dados.cor : '#ccc',
+                cursor: fase.path ? 'pointer' : 'not-allowed'
               }}
             >
               {fase.id}
             </button>
-            <p style={{ fontWeight: 'bold', marginTop: '10px' }}>{fase.nome}</p>
-            {index < dados.fases.length - 1 && <div style={linhaStyle}></div>}
+
+            <p style={nomeFaseStyle}>{fase.nome}</p>
+
+            {/* Linha Conectora (apenas se não for o último) */}
+            {/* index < dados.fases.length - 1 && (
+  <div style={linhaStyle}></div>
+) */}
+            
           </div>
         ))}
       </div>
@@ -56,22 +76,75 @@ export default function Trilha() {
   );
 }
 
-// Estilos rápidos
-const btnVoltar = { background: 'none', border: 'none', color: '#888', cursor: 'pointer', marginBottom: '20px' };
-const containerTrilha = { display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '30px' };
-const wrapperFase = {
+// Estilos para Web (React)
+const containerStyle = {
+  padding: '40px 20px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  position: 'relative',
-  marginBottom: '60px', // Aumente o espaço para o texto não bater na linha
-  zIndex: 2 // Garante que o texto e o botão fiquem na frente
+  minHeight: '100vh',
+  backgroundColor: '#fff'
 };
+
+const btnVoltarStyle = {
+  alignSelf: 'flex-start',
+  background: 'none',
+  border: 'none',
+  color: '#888',
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  marginBottom: '20px',
+  fontSize: '1rem'
+};
+
+const tituloStyle = {
+  fontSize: '2rem',
+  fontWeight: '900',
+  marginBottom: '40px'
+};
+
+const containerTrilhaStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '100%'
+};
+
+const wrapperFaseStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  marginBottom: '60px',
+  position: 'relative',
+  zIndex: 1
+};
+
+const circuloStyle = {
+  width: '80px',
+  height: '80px',
+  borderRadius: '50%',
+  border: 'none',
+  color: 'white',
+  fontSize: '1.5rem',
+  fontWeight: 'bold',
+  boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+  zIndex: 3, 
+  cursor: 'pointer',
+  position: 'relative' 
+};
+
+const nomeFaseStyle = {
+  fontWeight: 'bold',
+  marginTop: '10px',
+  fontSize: '1.1rem',
+  color: '#333'
+};
+
 const linhaStyle = {
   position: 'absolute',
-  top: '80px', // Começa abaixo do botão
+  top: '40px',
   width: '8px',
-  height: '70px', // Ajuste para conectar com a próxima
+  height: '110px',
   backgroundColor: '#e5e5e5',
-  zIndex: -1 // COLOCA A LINHA ATRÁS DE TUDO
+  zIndex: -1
 };

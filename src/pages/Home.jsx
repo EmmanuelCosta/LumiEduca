@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,78 +7,119 @@ export default function Home() {
   return (
     <div style={containerStyle}>
       <h1 style={tituloStyle}>Olá, Pequeno Explorador! 🦊</h1>
-      <p style={{ color: '#666', marginBottom: '30px' }}>Qual caminho vamos seguir hoje?</p>
+      <p style={subtituloStyle}>Qual caminho vamos seguir hoje?</p>
 
       <div style={trilhaStyle}>
-        {/* Botão de Matemática - O Único Ativo no MVP */}
-        <div style={faseWrapper}>
-            <button className="btn-lumi" onClick={() => navigate('/trilha/matematica')}>
-                ➕ Matemática
-            </button>
+        
+        {/* Botão de Matemática */}
+        <div style={faseWrapperStyle}>
+          <button 
+            className="btn-lumi" 
+            style={botaoMatematicaStyle}
+            onClick={() => navigate('/trilha/matematica')}
+          >
+            ➕ Matemática
+          </button>
           <span style={legendaStyle}>Desafio de Soma</span>
         </div>
 
         {/* Linha conectora cinza */}
         <div style={linhaStyle}></div>
 
-        {/* Botão de Português - Bloqueado para o futuro */}
-        <div style={faseWrapper}>
-            <button className="btn-lumi" onClick={() => navigate('/trilha/portugues')} style={{ backgroundColor: '#3498db' }}>
+        {/* Botão de Português */}
+        <div style={faseWrapperStyle}>
+          <button 
+            className="btn-lumi" 
+            style={botaoPortuguesStyle}
+            onClick={() => navigate('/trilha/portugues')}
+          >
             📚 Português
-            </button>
+          </button>
           <span style={{ ...legendaStyle, color: '#aaa' }}>Alfabeto (Em breve)</span>
         </div>
+
       </div>
     </div>
   );
 }
 
-// Estilos para a Home
+// Estilos para Web
 const containerStyle = {
   padding: '40px 20px',
-  textAlign: 'center',
-  maxWidth: '600px',
-  margin: '0 auto'
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  backgroundColor: '#fff',
+  minHeight: '80vh'
 };
 
 const tituloStyle = {
-  color: 'var(--lumi-orange)',
+  color: '#FF8C00', // Lumi Orange
   fontWeight: '900',
-  fontSize: '2rem'
+  fontSize: '2rem',
+  textAlign: 'center',
+  marginBottom: '10px'
+};
+
+const subtituloStyle = {
+  color: '#666',
+  fontSize: '1.1rem',
+  textAlign: 'center',
+  marginBottom: '30px'
 };
 
 const trilhaStyle = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: '10px',
-  marginTop: '40px'
+  marginTop: '20px',
+  width: '100%'
 };
 
-const faseWrapper = {
+const faseWrapperStyle = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  zIndex: 2
+  width: '100%'
 };
 
-const circuloStyle = {
-  width: '80px',
-  height: '80px',
-  borderRadius: '50%',
-  fontSize: '1.8rem'
+const botaoMatematicaStyle = {
+  backgroundColor: '#FF8C00',
+  color: 'white',
+  padding: '20px 40px',
+  borderRadius: '20px',
+  border: 'none',
+  width: '280px',
+  fontSize: '1.2rem',
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  boxShadow: '0 4px 15px rgba(255,140,0,0.3)',
+  transition: 'transform 0.2s'
+};
+
+const botaoPortuguesStyle = {
+  backgroundColor: '#3498db',
+  color: 'white',
+  padding: '20px 40px',
+  borderRadius: '20px',
+  border: 'none',
+  width: '280px',
+  fontSize: '1.2rem',
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  boxShadow: '0 4px 15px rgba(52,152,219,0.3)'
 };
 
 const legendaStyle = {
   fontWeight: 'bold',
   marginTop: '10px',
-  fontSize: '1.1rem'
+  fontSize: '1rem',
+  color: '#333'
 };
 
 const linhaStyle = {
   width: '10px',
   height: '50px',
   backgroundColor: '#e5e5e5',
-  margin: '-10px 0',
-  zIndex: 1
+  margin: '5px 0'
 };
