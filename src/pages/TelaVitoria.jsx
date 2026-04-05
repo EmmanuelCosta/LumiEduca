@@ -5,7 +5,7 @@ import lumiVitoria from '../assets/lumi_vitoria.png';
 export default function TelaVitoria({ pontos }) {
   const navigate = useNavigate();
 
-  // Lógica para detectar mobile em tempo real
+  // Mantemos o isMobile apenas para o tamanho da imagem e fontes
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -15,68 +15,54 @@ export default function TelaVitoria({ pontos }) {
   }, []);
 
   return (
-    <div style={{ ...fundoStyle, minHeight: isMobile ? '90vh' : '80vh' }}>
-      <div style={{ 
-        ...containerStyle, 
-        padding: isMobile ? '30px 20px' : '40px',
-        maxWidth: isMobile ? '90%' : '400px'
-      }}>
+    <div style={fundoStyle}>
+      <div style={containerStyle}>
         
         {/* Efeito de Confetes */}
         <div style={{ ...confeteStyle, fontSize: isMobile ? '2rem' : '1.5rem' }}>
           🎉 🎉 🎉
         </div>
 
-        {/* Imagem do Lumi Comemorando - Maior no Mobile */}
+        {/* Imagem do Lumi - Altura fluida para não quebrar o layout */}
         <img 
           src={lumiVitoria} 
           alt="Lumi Comemorando" 
           style={{ 
             ...lumiImageStyle, 
-            height: isMobile ? '200px' : '150px' 
+            height: isMobile ? '180px' : '150px' 
           }} 
         />
 
         <h1 style={{ 
           ...tituloStyle, 
-          fontSize: isMobile ? '2.2rem' : '2rem' 
+          fontSize: isMobile ? '1.8rem' : '2.2rem' 
         }}>
           MISSÃO CUMPRIDA!
         </h1>
         
         <p style={{ 
           ...subtituloStyle, 
-          fontSize: isMobile ? '1.3rem' : '1.1rem' 
+          fontSize: isMobile ? '1.1rem' : '1.3rem' 
         }}>
           Você brilhou hoje, Explorador!
         </p>
 
-        {/* Resumo da Recompensa - Card mais robusto no Mobile */}
-        <div style={{ 
-          ...cardPontosStyle, 
-          padding: isMobile ? '30px' : '20px' 
-        }}>
-          <span style={{ fontSize: isMobile ? '3.5rem' : '2.5rem' }}>🌟</span>
-          <p style={{ ...txtGanhouStyle, fontSize: isMobile ? '1.2rem' : '1rem' }}>
-            VOCÊ GANHOU:
-          </p>
+        {/* Card de Pontos - 100% da largura do container pai */}
+        <div style={cardPontosStyle}>
+          <span style={{ fontSize: isMobile ? '3rem' : '2.5rem' }}>🌟</span>
+          <p style={txtGanhouStyle}>VOCÊ GANHOU:</p>
           <h2 style={{ 
             ...pontosValorStyle, 
-            fontSize: isMobile ? '3.5rem' : '2.5rem' 
+            fontSize: isMobile ? '3rem' : '2.5rem' 
           }}>
             {pontos} <span style={txtPontosPequenoStyle}>Pontos</span>
           </h2>
         </div>
 
-        {/* Botão para Voltar - Gigante para o polegar da criança */}
+        {/* Botão para Voltar - Ocupa toda a largura interna */}
         <button 
           onClick={() => navigate('/')}
-          style={{ 
-            ...btnStyle, 
-            padding: isMobile ? '20px' : '15px',
-            fontSize: isMobile ? '1.3rem' : '1rem',
-            boxShadow: isMobile ? '0 6px 0 #CC7000' : 'none'
-          }}
+          style={btnStyle}
         >
           VOLTAR PARA A TRILHA
         </button>
@@ -86,59 +72,74 @@ export default function TelaVitoria({ pontos }) {
   );
 }
 
-// --- ESTILOS ---
+// --- ESTILOS RESPONSIVOS ---
 
 const fundoStyle = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
+  minHeight: '100vh',
   padding: '20px',
-  backgroundColor: '#f5f5f5'
+  backgroundColor: '#f5f5f5',
+  boxSizing: 'border-box'
 };
 
 const containerStyle = {
   backgroundColor: 'white',
   borderRadius: '30px',
   textAlign: 'center',
-  width: '100%',
-  boxShadow: '0 10px 25px rgba(255,140,0,0.15)',
-  position: 'relative'
-};
-
-const confeteStyle = {
-  marginBottom: '10px',
-  opacity: 0.8
-};
-
-const lumiImageStyle = {
-  width: 'auto',
-  marginBottom: '20px'
-};
-
-const tituloStyle = {
-  color: '#FF8C00',
-  fontWeight: '900',
-  margin: '10px 0'
-};
-
-const subtituloStyle = {
-  color: '#666',
-  marginBottom: '25px'
-};
-
-const cardPontosStyle = {
-  backgroundColor: '#FFF8E1',
-  borderRadius: '20px',
-  border: '2px solid #FFE082',
+  // O SEGREDO: 92% no mobile, mas trava em 450px no PC
+  width: '92%',
+  maxWidth: '450px',
+  padding: '8% 5%', 
+  boxShadow: '0 10px 30px rgba(255,140,0,0.12)',
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center'
 };
 
+const confeteStyle = {
+  marginBottom: '10px',
+  opacity: 0.9
+};
+
+const lumiImageStyle = {
+  width: 'auto',
+  marginBottom: '15px',
+  maxWidth: '100%' // Garante que a imagem nunca vaze o card
+};
+
+const tituloStyle = {
+  color: '#FF8C00',
+  fontWeight: '900',
+  margin: '10px 0',
+  lineHeight: '1.1'
+};
+
+const subtituloStyle = {
+  color: '#666',
+  marginBottom: '20px',
+  width: '90%'
+};
+
+const cardPontosStyle = {
+  backgroundColor: '#FFF8E1',
+  borderRadius: '25px',
+  border: '2px solid #FFE082',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '100%', // Preenche o card branco
+  padding: '20px 0',
+  boxSizing: 'border-box'
+};
+
 const txtGanhouStyle = {
   fontWeight: 'bold',
   color: '#333',
-  margin: '5px 0'
+  margin: '5px 0',
+  fontSize: '1rem'
 };
 
 const pontosValorStyle = {
@@ -159,8 +160,11 @@ const btnStyle = {
   backgroundColor: '#FF8C00',
   color: 'white',
   border: 'none',
-  borderRadius: '15px',
-  fontWeight: 'bold',
+  borderRadius: '20px',
+  fontWeight: '900',
   cursor: 'pointer',
+  padding: '18px',
+  fontSize: '1.2rem',
+  boxShadow: '0 6px 0 #CC7000',
   transition: 'transform 0.1s'
 };

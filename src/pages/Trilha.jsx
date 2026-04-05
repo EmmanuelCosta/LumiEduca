@@ -25,7 +25,6 @@ export default function Trilha() {
   const navigate = useNavigate();
   const dados = DADOS_TRILHAS[materia];
 
-  // Lógica para detectar mobile em tempo real
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -44,37 +43,38 @@ export default function Trilha() {
   }
 
   return (
-    <div style={{ ...containerStyle, padding: isMobile ? '20px 10px' : '40px 20px' }}>
+    <div style={containerStyle}>
       {/* Botão Voltar */}
-      <button onClick={() => navigate('/')} style={{ ...btnVoltarStyle, fontSize: isMobile ? '1.2rem' : '1rem' }}>
+      <button 
+        onClick={() => navigate('/')} 
+        style={{ ...btnVoltarStyle, fontSize: isMobile ? '1.2rem' : '1rem' }}
+      >
         ← Menu Inicial
       </button>
       
       <h1 style={{ 
         ...tituloStyle, 
         color: dados.cor,
-        fontSize: isMobile ? '1.8rem' : '2.5rem',
-        textAlign: 'center'
+        fontSize: isMobile ? '1.8rem' : '2.5rem'
       }}>
         Trilha de {dados.nome}
       </h1>
       
       <div style={containerTrilhaStyle}>
         {dados.fases.map((fase) => (
-          <div key={fase.id} style={{ ...wrapperFaseStyle, marginBottom: isMobile ? '40px' : '60px' }}>
+          <div key={fase.id} style={wrapperFaseStyle}>
             
-            {/* Círculo da Fase - Bem maior no Mobile */}
             <button 
               onClick={() => fase.path && navigate(fase.path)}
               disabled={!fase.path}
               style={{ 
                 ...circuloStyle, 
-                width: isMobile ? '110px' : '80px',
-                height: isMobile ? '110px' : '80px',
-                fontSize: isMobile ? '2.2rem' : '1.5rem',
                 backgroundColor: fase.path ? dados.cor : '#ccc',
                 cursor: fase.path ? 'pointer' : 'not-allowed',
-                boxShadow: isMobile ? '0 6px 0 #bbb' : '0 4px 0 #bbb' // Efeito 3D mais forte no mobile
+                // Dinâmico: 25% da largura da tela, mas entre 80px e 120px
+                width: isMobile ? 'min(25vw, 110px)' : '80px',
+                height: isMobile ? 'min(25vw, 110px)' : '80px',
+                fontSize: isMobile ? '2rem' : '1.5rem'
               }}
             >
               {fase.id}
@@ -82,8 +82,7 @@ export default function Trilha() {
 
             <p style={{ 
               ...nomeFaseStyle, 
-              fontSize: isMobile ? '1.4rem' : '1.1rem',
-              marginTop: isMobile ? '15px' : '10px'
+              fontSize: isMobile ? '1.3rem' : '1.1rem' 
             }}>
               {fase.nome}
             </p>
@@ -95,14 +94,17 @@ export default function Trilha() {
   );
 }
 
-// --- ESTILOS ---
+// --- ESTILOS RESPONSIVOS ---
 
 const containerStyle = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   minHeight: '100vh',
-  backgroundColor: '#fff'
+  backgroundColor: '#fff',
+  width: '100%',
+  padding: '5% 5% 10% 5%', // Padding proporcional
+  boxSizing: 'border-box'
 };
 
 const btnVoltarStyle = {
@@ -117,7 +119,9 @@ const btnVoltarStyle = {
 
 const tituloStyle = {
   fontWeight: '900',
-  marginBottom: '40px'
+  marginBottom: '40px',
+  textAlign: 'center',
+  width: '90%'
 };
 
 const containerTrilhaStyle = {
@@ -131,8 +135,9 @@ const wrapperFaseStyle = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  position: 'relative',
-  zIndex: 1
+  marginBottom: '15%', // Espaçamento entre fases baseado na altura
+  width: '100%',
+  position: 'relative'
 };
 
 const circuloStyle = {
@@ -140,13 +145,17 @@ const circuloStyle = {
   border: 'none',
   color: 'white',
   fontWeight: 'bold',
-  zIndex: 3, 
-  position: 'relative',
-  transition: 'transform 0.1s active'
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  boxShadow: '0 6px 0 #bbb', // Sombra 3D sólida
+  transition: 'transform 0.1s'
 };
 
 const nomeFaseStyle = {
   fontWeight: 'bold',
   color: '#333',
-  textAlign: 'center'
+  textAlign: 'center',
+  marginTop: '15px',
+  width: '80%'
 };

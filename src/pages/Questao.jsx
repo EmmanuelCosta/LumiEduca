@@ -12,7 +12,7 @@ export default function Questao({ setPontos, concluidas, setConcluidas }) {
   const [escolha, setEscolha] = useState(null);
   const [errouAlguma, setErrouAlguma] = useState(false);
 
-  // Lógica para detectar mobile
+  // Mantemos para mudar de 2 colunas para 1 coluna no mobile
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -57,27 +57,22 @@ export default function Questao({ setPontos, concluidas, setConcluidas }) {
   if (!questaoAtual) return null;
 
   return (
-    <div style={{ 
-      ...cardStyle, 
-      maxWidth: isMobile ? '90%' : '450px',
-      padding: isMobile ? '20px' : '30px'
-    }}>
+    <div style={cardStyle}>
       {/* Indicador de progresso */}
-      <p style={{ color: '#888', fontWeight: 'bold' }}>
+      <p style={{ color: '#888', fontWeight: 'bold', fontSize: '0.9rem' }}>
         Questão {indice + 1} de {questoes.length}
       </p>
 
       <h2 style={{ 
-        marginBottom: '30px', 
-        fontSize: isMobile ? '1.5rem' : '1.8rem',
-        color: '#333'
+        ...perguntaStyle,
+        fontSize: isMobile ? '1.4rem' : '1.8rem' 
       }}>
         {questaoAtual.pergunta}
       </h2>
 
       <div style={{ 
         ...gridStyle, 
-        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' // Coluna única no mobile
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' 
       }}>
         {questaoAtual.opcoes.map((op) => {
           const isCorreta = op === questaoAtual.correta;
@@ -101,12 +96,11 @@ export default function Questao({ setPontos, concluidas, setConcluidas }) {
               key={op} 
               style={{ 
                 ...btnRespostaStyle,
-                padding: isMobile ? '25px 15px' : '20px', 
-                fontSize: isMobile ? '1.3rem' : '1.1rem',
                 backgroundColor: bgColor,
                 color: textColor,
                 border: respondido ? 'none' : '2px solid #e5e5e5',
-                boxShadow: !respondido ? '0 4px 0 #e5e5e5' : 'none'
+                boxShadow: !respondido ? '0 5px 0 #e5e5e5' : 'none',
+                padding: isMobile ? '22px 15px' : '20px'
               }}
               onClick={() => conferir(op)}
             >
@@ -119,11 +113,7 @@ export default function Questao({ setPontos, concluidas, setConcluidas }) {
       {respondido && (
         <button 
           onClick={proximo} 
-          style={{ 
-            ...btnProximoStyle,
-            padding: isMobile ? '20px' : '15px',
-            fontSize: isMobile ? '1.2rem' : '1rem'
-          }}
+          style={btnProximoStyle}
         >
           {indice < questoes.length - 1 ? "PRÓXIMA PERGUNTA ➔" : "VER MEUS PONTOS 🏆"}
         </button>
@@ -132,29 +122,42 @@ export default function Questao({ setPontos, concluidas, setConcluidas }) {
   );
 }
 
-// --- ESTILOS ---
+// --- ESTILOS RESPONSIVOS ---
 
 const cardStyle = { 
   backgroundColor: 'white', 
-  margin: '20px auto', 
+  margin: '30px auto', 
   textAlign: 'center', 
   borderRadius: '25px',
-  boxShadow: '0 8px 20px rgba(0,0,0,0.08)' 
+  boxShadow: '0 8px 25px rgba(0,0,0,0.06)',
+  width: '92%',      // Ocupa quase toda a largura no celular
+  maxWidth: '500px', // Limita o tamanho no Desktop
+  padding: '5%',     // Padding proporcional ao tamanho da tela
+  boxSizing: 'border-box'
+};
+
+const perguntaStyle = {
+  marginBottom: '30px', 
+  color: '#333',
+  fontWeight: '900',
+  lineHeight: '1.2'
 };
 
 const gridStyle = { 
   display: 'grid', 
-  gap: '15px' 
+  gap: '12px',
+  width: '100%'
 };
 
 const btnRespostaStyle = {
-  borderRadius: '15px',
+  borderRadius: '18px',
   fontWeight: 'bold',
   cursor: 'pointer',
-  transition: 'all 0.1s ease',
+  transition: 'transform 0.1s ease',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center'
+  justifyContent: 'center',
+  fontSize: '1.2rem'
 };
 
 const btnProximoStyle = {
@@ -163,8 +166,10 @@ const btnProximoStyle = {
   backgroundColor: '#FF8C00', 
   color: 'white',
   border: 'none',
-  borderRadius: '15px',
+  borderRadius: '18px',
   fontWeight: '900',
   cursor: 'pointer',
-  boxShadow: '0 5px 0 #CC7000'
+  padding: '18px',
+  fontSize: '1.1rem',
+  boxShadow: '0 6px 0 #CC7000'
 };
