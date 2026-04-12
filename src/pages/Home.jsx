@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Home() {
   const navigate = useNavigate();
 
-  // Mantemos o isMobile apenas para ajustes finos de texto que % não resolve
+  // Mantemos o isMobile apenas para ajustes finos de texto
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -68,12 +68,13 @@ export default function Home() {
 // --- ESTILOS FLUIDOS ---
 
 const containerStyle = {
-  padding: '5% 20px', // Padding lateral fixo, mas vertical em %
+  padding: '5% 20px', 
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   backgroundColor: '#fff',
-  minHeight: '100vh'
+  minHeight: '100vh',
+  boxSizing: 'border-box'
 };
 
 const tituloStyle = {
@@ -81,7 +82,7 @@ const tituloStyle = {
   fontWeight: '900',
   textAlign: 'center',
   marginBottom: '10px',
-  width: '90%' // Garante que o texto não cole na borda do celular
+  width: '90%'
 };
 
 const subtituloStyle = {
@@ -105,7 +106,6 @@ const faseWrapperStyle = {
   width: '100%'
 };
 
-// O segredo do botão: 90% de largura, mas para de crescer em 350px
 const baseBotaoStyle = {
   width: '90%', 
   maxWidth: '350px', 
@@ -125,7 +125,7 @@ const botaoMatematicaStyle = {
   ...baseBotaoStyle,
   backgroundColor: '#FF8C00',
   color: 'white',
-  boxShadow: '0 6px 0 #CC7000', // Sombra sólida 3D que funciona em tudo
+  boxShadow: '0 6px 0 #CC7000',
 };
 
 const botaoPortuguesStyle = {

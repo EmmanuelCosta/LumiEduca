@@ -21,6 +21,12 @@ export default function Header({ pontos }) {
     };
   }, []);
 
+  // Função para deslogar
+  const handleLogout = () => {
+    localStorage.removeItem('userType');
+    window.location.href = '/login'; // Força o redirecionamento e limpa o estado
+  };
+
   const handleInstallClick = async () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
@@ -35,7 +41,7 @@ export default function Header({ pontos }) {
     <header style={headerStyle}>
       <div style={containerStyle}>
         
-        {/* Lado Esquerdo: Logo e Nome (Sempre visíveis) */}
+        {/* Lado Esquerdo: Logo e Nome */}
         <div style={logoGroupStyle}>
           <img 
             src={logoLumi} 
@@ -47,36 +53,48 @@ export default function Header({ pontos }) {
           />
           <h2 style={{ 
             ...tituloStyle, 
-            fontSize: isMobile ? '1rem' : '1.5rem' // Diminui mas não some
+            fontSize: isMobile ? '1rem' : '1.5rem' 
           }}>
             LumiEduca
           </h2>
         </div>
 
-        {/* Centro: Botão de Instalar (Compacto no Mobile) */}
-        {deferredPrompt && (
-          <button onClick={handleInstallClick} style={{
-            ...installButtonStyle,
-            padding: isMobile ? '6px 8px' : '8px 15px',
-            fontSize: isMobile ? '0.7rem' : '0.9rem',
-            margin: isMobile ? '0 4px' : '0 10px'
+        {/* Lado Direito: Grupo de Ações (Instalar, Placar e Sair) */}
+        <div style={rightGroupStyle}>
+          
+          {/* Botão de Instalar (Só aparece se disponível) */}
+          {deferredPrompt && (
+            <button onClick={handleInstallClick} style={{
+              ...installButtonStyle,
+              padding: isMobile ? '6px 8px' : '8px 15px',
+              fontSize: isMobile ? '0.7rem' : '0.9rem'
+            }}>
+              {isMobile ? "📥 PWA" : "📥 Instalar App"}
+            </button>
+          )}
+          
+          {/* Placar de Pontos */}
+          <div style={{ 
+            ...placarContainerStyle, 
+            padding: isMobile ? '4px 8px' : '5px 15px' 
           }}>
-            {isMobile ? "📥 Instalar" : "📥 Baixar App"}
+            <span style={{ fontSize: isMobile ? '0.9rem' : '1.2rem' }}>🌟</span>
+            <span style={{ 
+              ...textoPontosStyle, 
+              fontSize: isMobile ? '0.85rem' : '1.1rem' 
+            }}>
+              {pontos}
+            </span>
+          </div>
+
+          {/* Botão Sair */}
+          <button onClick={handleLogout} style={{
+            ...btnLogoutStyle,
+            padding: isMobile ? '6px 10px' : '8px 15px',
+            fontSize: isMobile ? '0.8rem' : '0.9rem'
+          }}>
+            {isMobile ? "✖" : "Sair"}
           </button>
-        )}
-        
-        {/* Lado Direito: Placar de Pontos */}
-        <div style={{ 
-          ...placarContainerStyle, 
-          padding: isMobile ? '4px 8px' : '5px 15px' 
-        }}>
-          <span style={{ fontSize: isMobile ? '0.9rem' : '1.2rem' }}>🌟</span>
-          <span style={{ 
-            ...textoPontosStyle, 
-            fontSize: isMobile ? '0.85rem' : '1.1rem' 
-          }}>
-            {pontos}
-          </span>
         </div>
 
       </div>
@@ -103,16 +121,23 @@ const containerStyle = {
   margin: '0 auto',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between', // Distribui os 3 elementos
+  justifyContent: 'space-between',
   width: '100%',
-  gap: '5px' // Espaço mínimo entre os itens para não colarem
+  gap: '5px'
 };
 
 const logoGroupStyle = {
   display: 'flex',
   alignItems: 'center',
   gap: '6px',
-  flexShrink: 1 // Permite que o logo encolha um pouco se necessário
+  flexShrink: 1
+};
+
+const rightGroupStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px', // Espaço entre os elementos da direita
+  flexShrink: 0
 };
 
 const tituloStyle = {
@@ -132,7 +157,7 @@ const installButtonStyle = {
   fontWeight: 'bold',
   boxShadow: '0 3px 0 #CC7000',
   whiteSpace: 'nowrap',
-  flexShrink: 0 // O botão de baixar não deve sumir/encolher
+  flexShrink: 0
 };
 
 const placarContainerStyle = {
@@ -142,10 +167,22 @@ const placarContainerStyle = {
   borderRadius: '15px',
   border: '2px solid #ddd',
   gap: '4px',
-  flexShrink: 0 // Garante que os pontos fiquem sempre visíveis
+  flexShrink: 0
 };
 
 const textoPontosStyle = {
   fontWeight: '900',
   color: '#555'
+};
+
+const btnLogoutStyle = {
+  backgroundColor: '#ff4d4d',
+  color: 'white',
+  border: 'none',
+  borderRadius: '10px',
+  cursor: 'pointer',
+  fontWeight: 'bold',
+  boxShadow: '0 3px 0 #cc0000',
+  transition: 'transform 0.1s',
+  flexShrink: 0
 };
