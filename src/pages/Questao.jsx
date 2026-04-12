@@ -11,8 +11,10 @@ export default function Questao({ setPontos, concluidas, setConcluidas }) {
   const [respondido, setRespondido] = useState(false);
   const [escolha, setEscolha] = useState(null);
   const [errouAlguma, setErrouAlguma] = useState(false);
+  
+  // SOLUÇÃO PROBLEMA 1: Estado para rastrear pontos APENAS desta trilha
+  const [ganhosSessao, setGanhosSessao] = useState(0);
 
-  // Mantemos para mudar de 2 colunas para 1 coluna no mobile
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -33,6 +35,8 @@ export default function Questao({ setPontos, concluidas, setConcluidas }) {
       if (!concluidas.includes(idUnico)) {
         setPontos(prev => prev + 10);
         setConcluidas(prev => [...prev, idUnico]);
+        // Incrementa o que foi ganho nesta rodada específica
+        setGanhosSessao(prev => prev + 10);
       }
     } else {
       setErrouAlguma(true);
@@ -49,7 +53,8 @@ export default function Questao({ setPontos, concluidas, setConcluidas }) {
         alert("Ops! Você errou algumas. Tente acertar todas para ganhar a medalha!");
         navigate(`/trilha/${materia}`);
       } else {
-        navigate('/vitoria');
+        // SOLUÇÃO PROBLEMA 1: Passamos os ganhos da sessão via state do React Router
+        navigate('/vitoria', { state: { ganhos: ganhosSessao } });
       }
     }
   };
@@ -58,7 +63,6 @@ export default function Questao({ setPontos, concluidas, setConcluidas }) {
 
   return (
     <div style={cardStyle}>
-      {/* Indicador de progresso */}
       <p style={{ color: '#888', fontWeight: 'bold', fontSize: '0.9rem' }}>
         Questão {indice + 1} de {questoes.length}
       </p>
@@ -122,54 +126,9 @@ export default function Questao({ setPontos, concluidas, setConcluidas }) {
   );
 }
 
-// --- ESTILOS RESPONSIVOS ---
-
-const cardStyle = { 
-  backgroundColor: 'white', 
-  margin: '30px auto', 
-  textAlign: 'center', 
-  borderRadius: '25px',
-  boxShadow: '0 8px 25px rgba(0,0,0,0.06)',
-  width: '92%',      // Ocupa quase toda a largura no celular
-  maxWidth: '500px', // Limita o tamanho no Desktop
-  padding: '5%',     // Padding proporcional ao tamanho da tela
-  boxSizing: 'border-box'
-};
-
-const perguntaStyle = {
-  marginBottom: '30px', 
-  color: '#333',
-  fontWeight: '900',
-  lineHeight: '1.2'
-};
-
-const gridStyle = { 
-  display: 'grid', 
-  gap: '12px',
-  width: '100%'
-};
-
-const btnRespostaStyle = {
-  borderRadius: '18px',
-  fontWeight: 'bold',
-  cursor: 'pointer',
-  transition: 'transform 0.1s ease',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: '1.2rem'
-};
-
-const btnProximoStyle = {
-  marginTop: '30px', 
-  width: '100%', 
-  backgroundColor: '#FF8C00', 
-  color: 'white',
-  border: 'none',
-  borderRadius: '18px',
-  fontWeight: '900',
-  cursor: 'pointer',
-  padding: '18px',
-  fontSize: '1.1rem',
-  boxShadow: '0 6px 0 #CC7000'
-};
+// Estilos mantidos conforme o original...
+const cardStyle = { backgroundColor: 'white', margin: '30px auto', textAlign: 'center', borderRadius: '25px', boxShadow: '0 8px 25px rgba(0,0,0,0.06)', width: '92%', maxWidth: '500px', padding: '5%', boxSizing: 'border-box' };
+const perguntaStyle = { marginBottom: '30px', color: '#333', fontWeight: '900', lineHeight: '1.2' };
+const gridStyle = { display: 'grid', gap: '12px', width: '100%' };
+const btnRespostaStyle = { borderRadius: '18px', fontWeight: 'bold', cursor: 'pointer', transition: 'transform 0.1s ease', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' };
+const btnProximoStyle = { marginTop: '30px', width: '100%', backgroundColor: '#FF8C00', color: 'white', border: 'none', borderRadius: '18px', fontWeight: '900', cursor: 'pointer', padding: '18px', fontSize: '1.1rem', boxShadow: '0 6px 0 #CC7000' };
